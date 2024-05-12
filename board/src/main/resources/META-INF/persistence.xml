@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+    <persistence-unit name="hello">
+        <properties>
+            <!-- 필수 속성 -->
+            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="jakarta.persistence.jdbc.user" value="sa"/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/board"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+
+            <!-- 옵션 -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
+            <!-- 개발 초기 단계는 아래 옵션들도 쓸 수 있지만, 🚨운영 장비에는 절대 사용하면 안된다. 데이터가 중요하기 때문이다. -->
+            <property name="hibernate.hbm2ddl.auto" value="create"/> <!-- 기존 table 삭제 후 생성 -->
+            <!--            <property name="hibernate.hbm2ddl.auto" value="create-drop" /> create-drop은 Application이 끝날 때, 테이블을 삭제한다. -->
+            <!--            <property name="hibernate.hbm2ddl.auto" value="update" /> update 는 테이블의 열을 추가해줄 수 있다. 삭제는 불가능 -->
+            <!--            <property name="hibernate.hbm2ddl.auto" value="validate" /> entity 와 table 이 정상매핑 되었는지 확인하는 용도 -->
+            <!--            <property name="hibernate.hbm2ddl.auto" value="none" /> 아무 옵션 X -->
+        </properties>
+    </persistence-unit>
+
+</persistence>
