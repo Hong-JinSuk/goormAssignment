@@ -1,9 +1,13 @@
 package TriCount.repository;
 
-import lombok.RequiredArgsConstructor;
+import TriCount.domain.Settlement;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@RequiredArgsConstructor
-public class SettlementRepository {
+public interface SettlementRepository {
+
+    public Settlement create(String settlementName);
+
+    public void addParticipantToSettlement(Long settlementId, Long memberId);
+
 }

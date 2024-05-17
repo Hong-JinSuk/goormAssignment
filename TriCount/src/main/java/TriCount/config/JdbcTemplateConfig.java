@@ -3,7 +3,10 @@ package TriCount.config;
 import TriCount.interceptor.LoginCheckInterceptor;
 import TriCount.repository.MemberRepository;
 import TriCount.repository.MemberRepositoryImpl;
+import TriCount.repository.SettlementRepository;
+import TriCount.repository.SettlementRepositoryImpl;
 import TriCount.service.MemberService;
+import TriCount.service.SettlementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +32,16 @@ public class JdbcTemplateConfig implements WebMvcConfigurer{
     @Bean
     public MemberService memberService() {
         return new MemberService(memberRepository());
+    }
+
+    @Bean
+    public SettlementRepository settlementRepository() {
+        return new SettlementRepositoryImpl(dataSource);
+    }
+
+    @Bean
+    public SettlementService settlementService() {
+        return new SettlementService(settlementRepository());
     }
 
     @Bean
