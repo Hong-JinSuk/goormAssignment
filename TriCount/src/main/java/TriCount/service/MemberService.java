@@ -1,8 +1,8 @@
 package TriCount.service;
 
+import TriCount.advice.ForbiddenAccessException;
 import TriCount.domain.Member;
 import TriCount.repository.MemberRepository;
-import TriCount.repository.MemberRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,4 +27,7 @@ public class MemberService {
         return member;
     }
 
+    public Member findById(Long id) {
+        return memberRepository.findById(id).get();
+    }
 }

@@ -38,7 +38,7 @@ public class MemberController {
     ) {
         Member member = memberService.login(memberDTO.getLoginId(), memberDTO.getPassword());
 
-        Cookie cookie = new Cookie(LOGIN_MEMBER_COOKIE, String.valueOf(member.getLoginId()));
+        Cookie cookie = new Cookie(LOGIN_MEMBER_COOKIE, String.valueOf(member.getId()));
         response.addCookie(cookie);
 
         return new ResponseEntity<>(member, HttpStatus.OK);

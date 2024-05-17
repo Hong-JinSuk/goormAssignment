@@ -4,13 +4,10 @@ import TriCount.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -51,6 +48,18 @@ public class MemberRepositoryImpl implements MemberRepository {
         String sql = "select * from member where login_id = :loginId";
         try {
             Map<String, String> param = Map.of("loginId", loginId);
+            Member member = jdbcTemplate.queryForObject(sql, param, memberRowMapper());
+            return Optional.of(member);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Member> findById(Long id) {
+        String sql = "select * from member where id = :id";
+        Map<String, Long> param = Map.of("id", id);
+        try {
             Member member = jdbcTemplate.queryForObject(sql, param, memberRowMapper());
             return Optional.of(member);
         } catch (EmptyResultDataAccessException e) {
