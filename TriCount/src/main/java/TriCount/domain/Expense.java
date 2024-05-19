@@ -13,8 +13,9 @@ public class Expense {
     private String name;
     private Long settlementId;
     private Long payerId;
-    private BigDecimal price;
-    private LocalDateTime dateTime;
+    private String payerName;
+    private BigDecimal amount;
+    private LocalDateTime expenseDateTime;
 
     public Expense() {
     }

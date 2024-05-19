@@ -1,7 +1,6 @@
 package TriCount.interceptor;
 
 import TriCount.MemberContext;
-import TriCount.TriCountApiConst;
 import TriCount.advice.ForbiddenAccessException;
 import TriCount.domain.Member;
 import TriCount.service.MemberService;
@@ -15,7 +14,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

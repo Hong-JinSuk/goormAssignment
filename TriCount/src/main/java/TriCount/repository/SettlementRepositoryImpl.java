@@ -2,6 +2,9 @@ package TriCount.repository;
 
 import TriCount.domain.Settlement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class SettlementRepositoryImpl implements SettlementRepository {
@@ -38,6 +42,18 @@ public class SettlementRepositoryImpl implements SettlementRepository {
     }
 
     @Override
+    public Optional<Settlement> findById(Long id) {
+        String sql = "select * from settlement where id = :id";
+        Map<String, Long> param = Map.of("id", id);
+        try {
+            Settlement settlement = jdbcTemplate.queryForObject(sql, param, settlementRowMapper());
+            return Optional.of(settlement);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public void addParticipantToSettlement(Long settlementId, Long memberId) {
         String sql = "insert into settlement_participant (settlement_id, member_id) values (:settlementId, :memberId)";
         MapSqlParameterSource params = new MapSqlParameterSource()
@@ -45,6 +61,10 @@ public class SettlementRepositoryImpl implements SettlementRepository {
                 .addValue("memberId", memberId);
 
         jdbcTemplate.update(sql, params);
+    }
+
+    private RowMapper<Settlement> settlementRowMapper() {
+        return BeanPropertyRowMapper.newInstance(Settlement.class);
     }
 
 }

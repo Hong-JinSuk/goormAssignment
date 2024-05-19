@@ -1,9 +1,11 @@
 package TriCount.repository;
 
-import lombok.RequiredArgsConstructor;
+import TriCount.domain.Expense;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@RequiredArgsConstructor
-public class ExpenseRepository {
+public interface ExpenseRepository {
+
+    public Expense save(Expense expense);
+
 }

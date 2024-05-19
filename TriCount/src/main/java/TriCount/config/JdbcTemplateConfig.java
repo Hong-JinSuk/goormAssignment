@@ -1,10 +1,8 @@
 package TriCount.config;
 
 import TriCount.interceptor.LoginCheckInterceptor;
-import TriCount.repository.MemberRepository;
-import TriCount.repository.MemberRepositoryImpl;
-import TriCount.repository.SettlementRepository;
-import TriCount.repository.SettlementRepositoryImpl;
+import TriCount.repository.*;
+import TriCount.service.ExpenseService;
 import TriCount.service.MemberService;
 import TriCount.service.SettlementService;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +40,16 @@ public class JdbcTemplateConfig implements WebMvcConfigurer{
     @Bean
     public SettlementService settlementService() {
         return new SettlementService(settlementRepository());
+    }
+
+    @Bean
+    public ExpenseRepository expenseRepository() {
+        return new ExpenseRepositoryImpl(dataSource);
+    }
+
+    @Bean
+    public ExpenseService expenseService() {
+        return new ExpenseService(expenseRepository(), settlementRepository());
     }
 
     @Bean
