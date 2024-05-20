@@ -27,7 +27,7 @@ jobs:
           distribution: "adopt"
 
 
-      - name: Make application.properties
+      - name: Create application.properties
         run: |
           cd ./src/main/resources
           touch ./application.properties
