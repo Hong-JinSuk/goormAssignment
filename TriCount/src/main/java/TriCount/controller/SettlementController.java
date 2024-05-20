@@ -33,8 +33,8 @@ public class SettlementController {
         return new ResponseEntity<>(settlement, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/balance")
-    public ResponseEntity<Settlement> getSettlementBalanceResult(@PathVariable("id") Long settlementId) {
-
-    }
+//    @GetMapping("/{id}/balance")
+//    public ResponseEntity<Settlement> getSettlementBalanceResult(@PathVariable("id") Long settlementId) {
+//
+//    }
 }
