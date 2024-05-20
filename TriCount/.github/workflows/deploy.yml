@@ -2,9 +2,11 @@ name: CD with Gradle
 
 on:
   push:
+    paths:
+      - 'TriCount/**'
     branches:
       - main
-
+  workflow_dispatch:
 
 permissions:
   contents: read
