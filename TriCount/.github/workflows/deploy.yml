@@ -27,11 +27,11 @@ jobs:
           distribution: "adopt"
 
 
-      - name: Make application.yml
+      - name: Make application.properties
         run: |
           cd ./src/main/resources
-          touch ./application.yml
-          echo "${{ secrets.PROPERTIES }}" > ./application.yml
+          touch ./application.properties
+          echo "${{ secrets.PROPERTIES }}" > ./application.properties
         shell: bash
 
       - name: Build with Gradle
