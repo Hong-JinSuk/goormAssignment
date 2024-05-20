@@ -2,7 +2,8 @@ name: CD with Gradle
 
 on:
   push:
-    branches: [ "사용하고자 하는 브랜치 이름" ]
+    branches:
+      - main
 
 
 permissions:
