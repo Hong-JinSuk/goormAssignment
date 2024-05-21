@@ -27,6 +27,15 @@ jobs:
           java-version: '17'
           distribution: "adopt"
 
+      - name : Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H your.server.com >> ~/.ssh/known_hosts
+
+      - name: Run deployment commands
+        uses: appleboy/ssh-action@master
 
       - name: Create application.properties
         run: |
@@ -48,14 +57,12 @@ jobs:
 
       - name: Deploy to server
         uses: appleboy/ssh-action@master
-        id: deploy
         with:
           host: ${{ secrets.HOST }}
-          username: ubuntu
-          key: ${{ secrets.KEY }}
-          envs: GITHUB_SHA
+          username: hjs2-goorm
+          key: ${{ secrets.PRIVATE_KEY }}
           script: |
             sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_REPO }}
+            sudo docker pull ***
             docker-compose up -d
-            docker image prune -f
+            sudo docker image prune -f
