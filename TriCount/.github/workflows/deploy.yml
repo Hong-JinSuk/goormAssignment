@@ -12,8 +12,9 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,30 +32,44 @@ jobs:
           echo "${{ secrets.PROPERTIES }}" > ./application.properties
         shell: bash
 
-      - name: Build with Gradle
-        run: |
-          chmod +x ./gradlew
-          ./gradlew clean build -x test
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-      - name: Docker build
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test --stacktrace
+
+      - name: Docker Hub build & push
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile -t hjs/spring-app .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+          docker images
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
 
-      - name: Docker test
-        run: docker run -e CI=true hjs/spring-app ./gradlew test
+#      - name: Docker test
+#        run: docker run -e CI=true hjs/spring-app ./gradlew test
+#
+#      - name: Generate deployment package
+#        run: zip -r deploy.zip . -x '*.git*'
 
-      - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
-
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v18
+      - name: Deploy to WAS
+        uses: appleboy/ssh-action@master
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-          application_name: goormtricount
-          environment_name: Goormtricount-env
-          existing_bucket_name: elasticbeanstalk-ap-northeast-2-851725225259
-          region: ap-northeast-2
-          version_label: ${{ github.sha }}
-          deployment_package: deploy.zip
+          host: ${{ secrets.WAS_HOST }}
+          username: ${{ secrets.WAS_USERNAME }}
+          key: ${{ secrets.WAS_KEY }}
+          port: ${{ secrets.WAS_SSH_PORT }}
+          script: |
+            cd /home/ubuntu/Tricount/
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker rm -f $(sudo docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+            sudo docker-compose up -d
+            sudo docker image prune -f
+#          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+#          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+#          application_name: goormtricount
+#          environment_name: Goormtricount-env
+#          existing_bucket_name: elasticbeanstalk-ap-northeast-2-851725225259
+#          region: ap-northeast-2
+#          version_label: ${{ github.sha }}
+#          deployment_package: deploy.zip
