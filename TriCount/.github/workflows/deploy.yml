@@ -42,12 +42,12 @@ jobs:
           docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }} ./
           docker push ${{ secrets.DOCKER_REPO }}
 
-#      - name: Setup SSH
-#        run: |
-#          mkdir -p ~/.ssh
-#          echo "${{ secrets.KEY }}" > ~/.ssh/id_rsa
-#          chmod 600 ~/.ssh/id_rsa
-#          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -63,9 +63,9 @@ jobs:
             sudo docker-compose up -d
             sudo docker image prune -f
 
-#    env:
-#      # 여기에 SSH_PRIVATE_KEY 환경 변수를 추가
-#      KEY: ${{ secrets.KEY }}
+    env:
+      # 여기에 SSH_PRIVATE_KEY 환경 변수를 추가
+      KEY: ${{ secrets.KEY }}
 
 
 #      - run: docker build -t realtone/goorm-tricount -f ./
