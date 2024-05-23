@@ -42,6 +42,13 @@ jobs:
           docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }} ./
           docker push ${{ secrets.DOCKER_REPO }}
 
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy to server
         uses: appleboy/ssh-action@master
         id: deploy
@@ -49,12 +56,16 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ec2-user
           key: ${{ secrets.KEY }}
-          envs: GITHUB_SHA
           script: |
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_REPO }}
             sudo docker-compose up -d
             sudo docker image prune -f
+
+    env:
+      # 여기에 SSH_PRIVATE_KEY 환경 변수를 추가
+      KEY: ${{ secrets.KEY }}
+
 
 #      - run: docker build -t realtone/goorm-tricount -f ./
 #      - run: docker run -e CI=true realtone/react-test-app npm test
