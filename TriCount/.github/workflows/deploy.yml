@@ -53,10 +53,11 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
-          username: ec2-user
+          username: react-docker-gh-user
           password: ${{ secrets.PASSWORD }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
+#          envs: GITHUB_SHA
           script: |
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_REPO }}
